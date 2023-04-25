@@ -58,8 +58,10 @@ class _MyHomePageState extends State<MyHomePage> {
                   Toast(
                     title: 'Error',
                     description: 'This is a error toast $id',
-                    icon: Icons.error,
-                    color: Colors.red,
+                    leading: const Icon(
+                      Icons.error,
+                      color: Colors.red,
+                    ),
                   ),
                 );
               },
@@ -73,8 +75,10 @@ class _MyHomePageState extends State<MyHomePage> {
                   Toast(
                     title: 'Info',
                     description: 'This is a info toast $id',
-                    icon: Icons.info,
-                    color: Colors.blue,
+                    leading: const Icon(
+                      Icons.info,
+                      color: Colors.blue,
+                    ),
                   ),
                   duration: const Duration(seconds: 1),
                 );

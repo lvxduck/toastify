@@ -7,14 +7,12 @@ class Toast extends StatelessWidget {
     Key? key,
     required this.title,
     required this.description,
-    this.icon,
-    this.color,
+    this.leading,
   }) : super(key: key);
 
   final String title;
   final String description;
-  final IconData? icon;
-  final Color? color;
+  final Widget? leading;
 
   @override
   Widget build(BuildContext context) {
@@ -24,12 +22,8 @@ class Toast extends StatelessWidget {
         padding: const EdgeInsets.all(16) - const EdgeInsets.only(right: 16),
         child: Row(
           children: [
-            if (icon != null) ...[
-              Icon(
-                icon!,
-                color: color ?? Theme.of(context).primaryColor,
-                size: 30,
-              ),
+            if (leading != null) ...[
+              leading!,
               const SizedBox(width: 16),
             ] else
               const SizedBox(width: 6),
