@@ -35,8 +35,16 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       body: Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            const SizedBox(height: 32),
+            Text(
+              'Adaptive selector',
+              style: Theme.of(context)
+                  .textTheme
+                  .headlineMedium
+                  ?.copyWith(color: Colors.grey[800]),
+            ),
+            const SizedBox(height: 12),
             ElevatedButton(
               onPressed: () {
                 final id = Random().nextInt(100);
@@ -81,6 +89,26 @@ class _MyHomePageState extends State<MyHomePage> {
                     ),
                   ),
                   duration: const Duration(seconds: 1),
+                  alignment: Alignment.topLeft,
+                );
+              },
+              child: const Text('Show info toast'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                final id = Random().nextInt(100);
+                showToast(
+                  context,
+                  Toast(
+                    title: 'Info',
+                    description: 'This is a info toast $id',
+                    leading: const Icon(
+                      Icons.info,
+                      color: Colors.blue,
+                    ),
+                  ),
+                  duration: const Duration(seconds: 1),
+                  alignment: Alignment.bottomCenter,
                 );
               },
               child: const Text('Show info toast'),

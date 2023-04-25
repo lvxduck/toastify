@@ -6,19 +6,21 @@ void showToast(
   BuildContext context,
   Widget child, {
   Duration? duration,
+  AlignmentGeometry alignment = Alignment.topRight,
 }) {
   final overlayState = Overlay.of(context, rootOverlay: true);
   final controller = ToastifyController.instance;
-  if (!controller.isInit(context)) {
-    final toast = Toastify();
-    controller.add(context, toast);
+  final key = '${context.hashCode}_${alignment.hashCode}';
+  if (!controller.has(key)) {
+    final toast = Toastify(alignment: alignment);
+    controller.add(key, toast);
     final overlayEntry = OverlayEntry(
       builder: (_) => toast,
     );
     overlayState.insert(overlayEntry);
   }
   WidgetsBinding.instance.addPostFrameCallback((_) {
-    controller.multiToast[context]?.addItem(child, duration);
+    controller.get(key).addItem(child, duration);
   });
 }
 
@@ -31,20 +33,24 @@ class ToastifyController {
 
   static final instance = ToastifyController._internal();
 
-  Map<BuildContext, Toastify> multiToast = {};
+  final Map<String, Toastify> _multiToast = {};
 
-  bool isInit(BuildContext context) {
-    return multiToast.containsKey(context);
+  bool has(String key) => _multiToast.containsKey(key);
+
+  void add(String key, Toastify toast) {
+    _multiToast[key] = toast;
   }
 
-  void add(BuildContext context, Toastify toast) {
-    multiToast[context] = toast;
-  }
+  Toastify get(String key) => _multiToast[key]!;
 }
 
 class Toastify extends StatelessWidget {
-  Toastify({super.key});
+  Toastify({
+    super.key,
+    required this.alignment,
+  });
 
+  final AlignmentGeometry alignment;
   final listDuration = const Duration(milliseconds: 260);
   final listKey = GlobalKey<AnimatedListState>();
   final List<Widget> items = [];
@@ -86,7 +92,7 @@ class Toastify extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Align(
-      alignment: Alignment.topRight,
+      alignment: alignment,
       child: SizedBox(
         width: 420,
         child: AnimatedList(
