@@ -1,8 +1,6 @@
-import 'dart:math';
-
+import 'package:example/widgets/advance_usage.dart';
 import 'package:example/widgets/basic_usage.dart';
 import 'package:flutter/material.dart';
-import 'package:toastify/toastify.dart';
 
 void main() {
   runApp(const MyApp());
@@ -52,83 +50,9 @@ class _MyHomePageState extends State<MyHomePage> {
                     ?.copyWith(color: Colors.grey[800]),
               ),
               const SizedBox(height: 12),
-              Text(
-                'Basic usage',
-                style: TextStyle(
-                  color: Theme.of(context).primaryColor,
-                  fontSize: 18,
-                ),
-              ),
               const BasicUsage(),
-              const SizedBox(height: 64),
-              ElevatedButton(
-                onPressed: () {
-                  final id = Random().nextInt(100);
-                  showToast(
-                    context,
-                    Toast(
-                      title: 'hhee baby',
-                      description: 'This is a basic toast $id',
-                    ),
-                  );
-                },
-                child: const Text('Show basic toast'),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  final id = Random().nextInt(100);
-                  showToast(
-                    context,
-                    Toast(
-                      title: 'Error',
-                      description: 'This is a error toast $id',
-                      leading: const Icon(
-                        Icons.error,
-                        color: Colors.red,
-                      ),
-                    ),
-                  );
-                },
-                child: const Text('Show error toast'),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  final id = Random().nextInt(100);
-                  showToast(
-                    context,
-                    Toast(
-                      title: 'Info',
-                      description: 'This is a info toast $id',
-                      leading: const Icon(
-                        Icons.info,
-                        color: Colors.blue,
-                      ),
-                    ),
-                    duration: const Duration(seconds: 1),
-                    alignment: Alignment.topLeft,
-                  );
-                },
-                child: const Text('Show info toast'),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  final id = Random().nextInt(100);
-                  showToast(
-                    context,
-                    Toast(
-                      title: 'Info',
-                      description: 'This is a info toast $id',
-                      leading: const Icon(
-                        Icons.info,
-                        color: Colors.blue,
-                      ),
-                    ),
-                    duration: const Duration(seconds: 1),
-                    alignment: Alignment.bottomCenter,
-                  );
-                },
-                child: const Text('Show info toast'),
-              ),
+              const SizedBox(height: 12),
+              const AdvanceUsage(),
             ],
           ),
         ),

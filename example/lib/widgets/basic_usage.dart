@@ -11,15 +11,24 @@ class BasicUsage extends StatefulWidget {
 }
 
 class _BasicUsageState extends State<BasicUsage> {
-  Alignment? alignment;
+  Alignment? alignment = Alignment.topRight;
   bool autoClose = false;
+  bool showLeading = false;
   double lifeTime = 100;
+  double duration = 200;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        Text(
+          'Basic usage',
+          style: TextStyle(
+            color: Theme.of(context).primaryColor,
+            fontSize: 18,
+          ),
+        ),
         ListTile(
           title: Row(
             children: [
@@ -28,11 +37,15 @@ class _BasicUsageState extends State<BasicUsage> {
               DropdownButton(
                 value: alignment,
                 items: [
-                  Alignment.topRight,
                   Alignment.topLeft,
                   Alignment.topCenter,
+                  Alignment.topRight,
                   Alignment.centerRight,
+                  Alignment.centerLeft,
                   Alignment.center,
+                  Alignment.bottomLeft,
+                  Alignment.bottomRight,
+                  Alignment.bottomCenter,
                 ]
                     .map(
                       (e) => DropdownMenuItem(
@@ -50,6 +63,11 @@ class _BasicUsageState extends State<BasicUsage> {
             ],
           ),
         ),
+        SwitchListTile(
+          value: showLeading,
+          onChanged: (value) => setState(() => showLeading = value),
+          title: const Text('Show leading'),
+        ),
         ListTile(
           title: Row(
             children: [
@@ -64,7 +82,6 @@ class _BasicUsageState extends State<BasicUsage> {
               ),
             ],
           ),
-          horizontalTitleGap: 0,
           subtitle: autoClose
               ? Slider(
                   value: lifeTime,
@@ -75,6 +92,16 @@ class _BasicUsageState extends State<BasicUsage> {
                 )
               : null,
         ),
+        ListTile(
+          title: Text('Duration: ${duration.toInt()} ms'),
+          subtitle: Slider(
+            value: duration,
+            onChanged: (value) => setState(() => duration = value),
+            min: 100,
+            max: 2000,
+            divisions: 10,
+          ),
+        ),
         const SizedBox(height: 16),
         ElevatedButton(
           onPressed: () {
@@ -83,11 +110,19 @@ class _BasicUsageState extends State<BasicUsage> {
               context,
               Toast(
                 title: 'Basic toast',
+                width: 320,
+                leading: showLeading
+                    ? const Icon(
+                        Icons.info,
+                        color: Colors.blue,
+                      )
+                    : null,
                 description: 'This is a basic toast $id '
                     '${autoClose ? '. It will close after ${lifeTime.toInt()} ms' : ''}',
               ),
               alignment: alignment ?? Alignment.topRight,
-              duration: autoClose
+              duration: Duration(milliseconds: duration.toInt()),
+              lifeTime: autoClose
                   ? Duration(
                       milliseconds: lifeTime.toInt(),
                     )
