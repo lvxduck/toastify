@@ -1,39 +1,44 @@
-<!--
-This README describes the package. If you publish this package to pub.dev,
-this README's contents appear on the landing page for your package.
+<div align="center">
+  <h1>Toastify</h1>
+  <div>
+    <a title="pub.dev" href="https://pub.dartlang.org/packages/fluent_ui" >
+      <img src="https://img.shields.io/pub/v/fluent_ui.svg?style=flat-square&include_prereleases&color=dc143c" />
+    </a>
+    <a title="GitHub License" href="https://github.com/lvxduck/adaptive_selector/blob/master/LICENSE">
+      <img src="https://img.shields.io/badge/License-MIT-yellow.svg" />
+    </a>
+    <a title="Made with Fluent Design" href="https://lvxduck.github.io/adaptive_selector">
+      <img src="https://img.shields.io/badge/-web demo-green">
+    </a>
+  </div>
+  <br/>
+  <p>
+      A comprehensive Flutter package that displays multiple types of toast messages with customizable designs and animations.
+  </p>
+</div>
 
-For information about how to write a good package README, see the guide for
-[writing package pages](https://dart.dev/guides/libraries/writing-package-pages).
 
-For general information about developing packages, see the Dart guide for
-[creating packages](https://dart.dev/guides/libraries/create-library-packages)
-and the Flutter guide for
-[developing packages and plugins](https://flutter.dev/developing-packages).
--->
-
-TODO: Put a short description of the package here that helps potential users
-know whether this package might be useful for them.
+---
 
 ## Features
 
-TODO: List what your package can do. Maybe include images, gifs, or videos.
+- Fancy design and animation
+- Easy to customize
+- Support showing muilti toast as a column
+- Prevent duplicate toast
 
 ## Getting started
 
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
-
 ## Usage
 
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder.
-
 ```dart
-const like = 'sample';
+showToast(
+  context,
+  const Toast(
+    title: 'Hi!',
+    description: 'This is toast',
+  ),
+);
 ```
 
-## Additional information
-
-TODO: Tell users more about the package: where to find more information, how to
-contribute to the package, how to file issues, what response they can expect
-from the package authors, and more.
+## Demo
