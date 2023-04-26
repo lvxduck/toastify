@@ -5,6 +5,7 @@ import 'toast_tile.dart';
 void showToast(
   BuildContext context,
   Widget child, {
+  Duration? lifeTime,
   Duration? duration,
   AlignmentGeometry alignment = Alignment.topRight,
 }) {
@@ -12,7 +13,11 @@ void showToast(
   final controller = ToastifyController.instance;
   final key = controller.genKey(context, alignment);
   if (!controller.has(key)) {
-    final toast = Toastify(alignment: alignment, key: key);
+    final toast = Toastify(
+      key: key,
+      alignment: alignment,
+      duration: duration ?? const Duration(milliseconds: 260),
+    );
     controller.add(key, toast);
     final overlayEntry = OverlayEntry(
       builder: (_) => toast,
@@ -21,7 +26,7 @@ void showToast(
     overlayState.insert(overlayEntry);
   }
   WidgetsBinding.instance.addPostFrameCallback((_) {
-    controller.get(key).addItem(child, duration);
+    controller.get(key).addItem(child, lifeTime);
   });
 }
 
@@ -56,20 +61,21 @@ class Toastify extends StatelessWidget {
   Toastify({
     super.key,
     required this.alignment,
+    required this.duration,
   });
 
   final AlignmentGeometry alignment;
-  final listDuration = const Duration(milliseconds: 260);
+  final Duration duration;
   final listKey = GlobalKey<AnimatedListState>();
   final List<Widget> items = [];
   late final OverlayEntry? overlayEntry;
 
-  void addItem(Widget item, Duration? duration) {
+  void addItem(Widget item, Duration? lifeTime) {
     if (items.contains(item)) return;
     items.insert(0, item);
-    listKey.currentState!.insertItem(0, duration: listDuration);
-    if (duration != null) {
-      Future.delayed(duration + listDuration, () {
+    listKey.currentState!.insertItem(0, duration: duration);
+    if (lifeTime != null) {
+      Future.delayed(lifeTime + duration, () {
         removeItem(item);
       });
     }
@@ -82,7 +88,7 @@ class Toastify extends StatelessWidget {
     listKey.currentState?.removeItem(
       index,
       (context, animation) => buildAnimatedItem(animation, item),
-      duration: listDuration,
+      duration: duration,
     );
     Future.delayed(const Duration(seconds: 2), () {
       if (items.isEmpty && ToastifyController.instance.has(key!)) {
@@ -111,14 +117,17 @@ class Toastify extends StatelessWidget {
     return SafeArea(
       child: Align(
         alignment: alignment,
-        child: AnimatedList(
-          padding: const EdgeInsets.all(12),
-          key: listKey,
-          shrinkWrap: true,
-          initialItemCount: items.length,
-          itemBuilder: (context, index, animation) {
-            return buildAnimatedItem(animation, items[index]);
-          },
+        child: Material(
+          color: Colors.transparent,
+          child: AnimatedList(
+            padding: const EdgeInsets.all(16),
+            key: listKey,
+            shrinkWrap: true,
+            initialItemCount: items.length,
+            itemBuilder: (context, index, animation) {
+              return buildAnimatedItem(animation, items[index]);
+            },
+          ),
         ),
       ),
     );
