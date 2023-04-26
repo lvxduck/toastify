@@ -10,13 +10,14 @@ void showToast(
 }) {
   final overlayState = Overlay.of(context, rootOverlay: true);
   final controller = ToastifyController.instance;
-  final key = '${context.toString()}_${alignment.toString()}';
+  final key = controller.genKey(context, alignment);
   if (!controller.has(key)) {
-    final toast = Toastify(alignment: alignment);
+    final toast = Toastify(alignment: alignment, key: key);
     controller.add(key, toast);
     final overlayEntry = OverlayEntry(
       builder: (_) => toast,
     );
+    toast.overlayEntry = overlayEntry;
     overlayState.insert(overlayEntry);
   }
   WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -33,15 +34,22 @@ class ToastifyController {
 
   static final instance = ToastifyController._internal();
 
-  final Map<String, Toastify> _multiToast = {};
+  final Map<Key, Toastify> _multiToast = {};
 
-  bool has(String key) => _multiToast.containsKey(key);
+  bool has(Key key) => _multiToast.containsKey(key);
 
-  void add(String key, Toastify toast) {
+  Key genKey(BuildContext context, AlignmentGeometry alignment) =>
+      Key('${context.toString()}_${alignment.toString()}');
+
+  void add(Key key, Toastify toast) {
     _multiToast[key] = toast;
   }
 
-  Toastify get(String key) => _multiToast[key]!;
+  void remove(Key key) {
+    _multiToast.remove(key);
+  }
+
+  Toastify get(Key key) => _multiToast[key]!;
 }
 
 class Toastify extends StatelessWidget {
@@ -54,6 +62,7 @@ class Toastify extends StatelessWidget {
   final listDuration = const Duration(milliseconds: 260);
   final listKey = GlobalKey<AnimatedListState>();
   final List<Widget> items = [];
+  late final OverlayEntry? overlayEntry;
 
   void addItem(Widget item, Duration? duration) {
     if (items.contains(item)) return;
@@ -75,9 +84,10 @@ class Toastify extends StatelessWidget {
       (context, animation) => buildAnimatedItem(animation, item),
       duration: listDuration,
     );
-    Future.delayed(const Duration(milliseconds: 500), () {
-      if (items.isEmpty) {
-        // remove overlayState
+    Future.delayed(const Duration(seconds: 2), () {
+      if (items.isEmpty && ToastifyController.instance.has(key!)) {
+        overlayEntry?.remove();
+        ToastifyController.instance.remove(key!);
       }
     });
   }
