@@ -117,7 +117,7 @@ class _BasicUsageState extends State<BasicUsage> {
                         color: Colors.blue,
                       )
                     : null,
-                description: 'This is a basic toast $id '
+                description: 'This is a basic toast '
                     '${autoClose ? '. It will close after ${lifeTime.toInt()} ms' : ''}',
               ),
               alignment: alignment ?? Alignment.topRight,

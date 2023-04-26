@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:toastify/toastify.dart';
 
@@ -26,16 +24,28 @@ class _AdvanceUsageState extends State<AdvanceUsage> {
         const SizedBox(height: 16),
         ElevatedButton(
           onPressed: () {
-            final id = Random().nextInt(100);
             showToast(
               context,
-              CustomInfoToast(
+              const CustomInfoToast(
                 title: 'Hello, Flutter dev!',
-                description: 'This is a custom info toast $id',
+                description: 'This is a custom info toast',
               ),
             );
           },
           child: const Text('Show custom info toast'),
+        ),
+        ElevatedButton(
+          onPressed: () {
+            showToast(
+              context,
+              const CustomInfoToast(
+                key: Key('value'),
+                title: 'Hello, Flutter dev!',
+                description: 'Prevent duplicate toast',
+              ),
+            );
+          },
+          child: const Text('Prevent duplicate toast'),
         ),
       ],
     );
