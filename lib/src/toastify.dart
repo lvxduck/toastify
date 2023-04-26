@@ -83,17 +83,21 @@ class Toastify extends StatelessWidget {
     }
   }
 
+  void removeAll() {
+    while (items.isNotEmpty) {
+      removeItem(items.last);
+    }
+  }
+
   void removeItem(Widget item) {
     final index = items.indexOf(item);
     if (index == -1) return;
+    items.removeAt(index);
     listKey.currentState?.removeItem(
       index,
       (context, animation) => buildAnimatedItem(animation, item),
       duration: duration,
     );
-    Future.delayed(duration, () {
-      items.removeAt(index);
-    });
     Future.delayed(const Duration(seconds: 2), () {
       if (items.isEmpty && ToastifyController.instance.has(key!)) {
         overlayEntry?.remove();
