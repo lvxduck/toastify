@@ -10,7 +10,7 @@ void showToast(
 }) {
   final overlayState = Overlay.of(context, rootOverlay: true);
   final controller = ToastifyController.instance;
-  final key = '${context.hashCode}_${alignment.hashCode}';
+  final key = '${context.toString()}_${alignment.toString()}';
   if (!controller.has(key)) {
     final toast = Toastify(alignment: alignment);
     controller.add(key, toast);
