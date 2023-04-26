@@ -8,15 +8,17 @@ class Toast extends StatelessWidget {
     required this.title,
     required this.description,
     this.leading,
+    this.width,
   }) : super(key: key);
 
   final String title;
   final String description;
   final Widget? leading;
+  final double? width;
 
   @override
   Widget build(BuildContext context) {
-    return Card(
+    final child = Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Padding(
         padding: const EdgeInsets.all(16) - const EdgeInsets.only(right: 16),
@@ -56,6 +58,13 @@ class Toast extends StatelessWidget {
           ],
         ),
       ),
+    );
+    if (width == null) {
+      return child;
+    }
+    return SizedBox(
+      width: width,
+      child: child,
     );
   }
 }

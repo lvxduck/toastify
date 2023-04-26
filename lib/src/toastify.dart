@@ -72,10 +72,7 @@ class Toastify extends StatelessWidget {
     items.removeAt(index);
     listKey.currentState?.removeItem(
       index,
-      (context, animation) => ToastWrapper(
-        animation: animation,
-        child: item,
-      ),
+      (context, animation) => buildAnimatedItem(animation, item),
       duration: listDuration,
     );
     Future.delayed(const Duration(milliseconds: 500), () {
@@ -89,25 +86,29 @@ class Toastify extends StatelessWidget {
     return context.findAncestorWidgetOfExactType<Toastify>()!;
   }
 
+  Widget buildAnimatedItem(Animation<double> animation, Widget item) {
+    return ToastWrapper(
+      animation: animation,
+      child: Align(
+        alignment: alignment,
+        child: item,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Align(
         alignment: alignment,
-        child: SizedBox(
-          width: 420,
-          child: AnimatedList(
-            padding: const EdgeInsets.all(12),
-            key: listKey,
-            shrinkWrap: true,
-            initialItemCount: items.length,
-            itemBuilder: (context, index, animation) {
-              return ToastWrapper(
-                animation: animation,
-                child: items[index],
-              );
-            },
-          ),
+        child: AnimatedList(
+          padding: const EdgeInsets.all(12),
+          key: listKey,
+          shrinkWrap: true,
+          initialItemCount: items.length,
+          itemBuilder: (context, index, animation) {
+            return buildAnimatedItem(animation, items[index]);
+          },
         ),
       ),
     );
