@@ -91,21 +91,23 @@ class Toastify extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Align(
-      alignment: alignment,
-      child: SizedBox(
-        width: 420,
-        child: AnimatedList(
-          padding: const EdgeInsets.all(12),
-          key: listKey,
-          shrinkWrap: true,
-          initialItemCount: items.length,
-          itemBuilder: (context, index, animation) {
-            return ToastWrapper(
-              animation: animation,
-              child: items[index],
-            );
-          },
+    return SafeArea(
+      child: Align(
+        alignment: alignment,
+        child: SizedBox(
+          width: 420,
+          child: AnimatedList(
+            padding: const EdgeInsets.all(12),
+            key: listKey,
+            shrinkWrap: true,
+            initialItemCount: items.length,
+            itemBuilder: (context, index, animation) {
+              return ToastWrapper(
+                animation: animation,
+                child: items[index],
+              );
+            },
+          ),
         ),
       ),
     );
