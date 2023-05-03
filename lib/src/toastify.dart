@@ -4,9 +4,7 @@ import 'toast_tile.dart';
 
 void showToast(
   BuildContext context,
-  Widget child, {
-  Duration? lifeTime,
-  Duration? duration,
+  Toast toast, {
   AlignmentGeometry alignment = Alignment.topRight,
 }) {
   final overlayState = Overlay.of(context, rootOverlay: true);
@@ -16,7 +14,6 @@ void showToast(
     final toast = Toastify(
       key: key,
       alignment: alignment,
-      duration: duration ?? const Duration(milliseconds: 260),
     );
     controller.add(key, toast);
     final overlayEntry = OverlayEntry(
@@ -26,8 +23,40 @@ void showToast(
     overlayState.insert(overlayEntry);
   }
   WidgetsBinding.instance.addPostFrameCallback((_) {
-    controller.get(key).addItem(child, lifeTime);
+    controller.get(key).addItem(toast);
   });
+}
+
+class Toast {
+  Toast({
+    this.id,
+    Widget? child,
+    this.lifeTime,
+    this.transitionBuilder,
+    this.title,
+    this.description,
+    this.leading,
+    this.width,
+    this.duration = const Duration(milliseconds: 300),
+  }) {
+    if (child == null) {
+      _child = DefaultToast(toast: this);
+    } else {
+      _child = child;
+    }
+  }
+
+  final String? id;
+  late final Widget _child;
+
+  Widget get child => _child;
+  final Duration? lifeTime;
+  final Duration duration;
+  final Widget Function(Animation<double>, Widget child)? transitionBuilder;
+  final String? title;
+  final String? description;
+  final Widget? leading;
+  final double? width;
 }
 
 class ToastifyController {
@@ -61,42 +90,46 @@ class Toastify extends StatelessWidget {
   Toastify({
     super.key,
     required this.alignment,
-    required this.duration,
   });
 
   final AlignmentGeometry alignment;
-  final Duration duration;
   final listKey = GlobalKey<AnimatedListState>();
-  final List<Widget> items = [];
+  final List<Toast> items = [];
   late final OverlayEntry? overlayEntry;
 
-  void addItem(Widget item, Duration? lifeTime) {
-    if (item.key != null && items.where((e) => e.key == item.key).isNotEmpty) {
+  void addItem(Toast toast) {
+    // Toast child is duplicate because child is constant
+    if (items.where((e) => e.child == toast.child).isNotEmpty) {
       return;
     }
-    items.insert(0, item);
-    listKey.currentState!.insertItem(0, duration: duration);
-    if (lifeTime != null) {
-      Future.delayed(lifeTime + duration, () {
-        removeItem(item);
+    // Toast child is duplicate by id
+    if (toast.id != null && items.where((e) => e.id == toast.id).isNotEmpty) {
+      return;
+    }
+    items.insert(0, toast);
+    listKey.currentState!.insertItem(0, duration: toast.duration);
+    if (toast.lifeTime != null) {
+      Future.delayed(toast.lifeTime! + toast.duration, () {
+        removeItem(toast.child);
       });
     }
   }
 
   void removeAll() {
     while (items.isNotEmpty) {
-      removeItem(items.last);
+      removeItem(items.last.child);
     }
   }
 
-  void removeItem(Widget item) {
-    final index = items.indexOf(item);
+  void removeItem(Widget toastWidget) {
+    final index = items.indexWhere((e) => e.child == toastWidget);
     if (index == -1) return;
+    final toast = items[index];
     items.removeAt(index);
     listKey.currentState?.removeItem(
       index,
-      (context, animation) => buildAnimatedItem(animation, item),
-      duration: duration,
+      (context, animation) => buildAnimatedItem(animation, toast),
+      duration: toast.duration,
     );
     Future.delayed(const Duration(seconds: 2), () {
       if (items.isEmpty && ToastifyController.instance.has(key!)) {
@@ -110,14 +143,16 @@ class Toastify extends StatelessWidget {
     return context.findAncestorWidgetOfExactType<Toastify>()!;
   }
 
-  Widget buildAnimatedItem(Animation<double> animation, Widget item) {
-    return ToastWrapper(
-      animation: animation,
-      child: Align(
-        alignment: alignment,
-        child: item,
-      ),
+  Widget buildAnimatedItem(Animation<double> animation, Toast toast) {
+    final child = Align(
+      alignment: alignment,
+      child: toast.child,
     );
+    return toast.transitionBuilder?.call(animation, child) ??
+        ToastTransition(
+          animation: animation,
+          child: child,
+        );
   }
 
   @override

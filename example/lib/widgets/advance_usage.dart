@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:toastify/toastify.dart';
 
@@ -26,10 +28,12 @@ class _AdvanceUsageState extends State<AdvanceUsage> {
           onPressed: () {
             showToast(
               context,
-              const CustomInfoToast(
-                title: 'Hello, Flutter dev!',
-                description: 'This is a custom info toast. '
-                    'It has button confirm to close toast and distroy all',
+              Toast(
+                child: CustomInfoToast(
+                  title: 'Hello, Flutter dev! ${Random().nextInt(10)}',
+                  description: 'This is a custom info toast. '
+                      'It has button confirm to close toast and distroy all',
+                ),
               ),
             );
           },
@@ -39,10 +43,12 @@ class _AdvanceUsageState extends State<AdvanceUsage> {
           onPressed: () {
             showToast(
               context,
-              const CustomInfoToast(
-                key: Key('value'),
-                title: 'Hello, Flutter dev!',
-                description: 'Prevent duplicate toast',
+              Toast(
+                id: '_toast',
+                child: const CustomInfoToast(
+                  title: 'Hello, Flutter dev!',
+                  description: 'Prevent duplicate toast',
+                ),
               ),
             );
           },

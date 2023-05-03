@@ -116,14 +116,14 @@ class _BasicUsageState extends State<BasicUsage> {
                     : null,
                 description: 'This is a basic toast '
                     '${autoClose ? '. It will close after ${lifeTime.toInt()} ms' : ''}',
+                duration: Duration(milliseconds: duration.toInt()),
+                lifeTime: autoClose
+                    ? Duration(
+                        milliseconds: lifeTime.toInt(),
+                      )
+                    : null,
               ),
               alignment: alignment ?? Alignment.topRight,
-              duration: Duration(milliseconds: duration.toInt()),
-              lifeTime: autoClose
-                  ? Duration(
-                      milliseconds: lifeTime.toInt(),
-                    )
-                  : null,
             );
           },
           child: const Text('Show basic toast'),

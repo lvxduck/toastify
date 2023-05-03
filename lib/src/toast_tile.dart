@@ -2,19 +2,13 @@ import 'package:flutter/material.dart';
 
 import '../toastify.dart';
 
-class Toast extends StatelessWidget {
-  const Toast({
+class DefaultToast extends StatelessWidget {
+  const DefaultToast({
     Key? key,
-    required this.title,
-    required this.description,
-    this.leading,
-    this.width,
+    required this.toast,
   }) : super(key: key);
 
-  final String title;
-  final String description;
-  final Widget? leading;
-  final double? width;
+  final Toast toast;
 
   @override
   Widget build(BuildContext context) {
@@ -24,8 +18,8 @@ class Toast extends StatelessWidget {
         padding: const EdgeInsets.all(16) - const EdgeInsets.only(right: 16),
         child: Row(
           children: [
-            if (leading != null) ...[
-              leading!,
+            if (toast.leading != null) ...[
+              toast.leading!,
               const SizedBox(width: 16),
             ] else
               const SizedBox(width: 6),
@@ -35,12 +29,12 @@ class Toast extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    title,
+                    toast.title!,
                     style: const TextStyle(fontWeight: FontWeight.w600),
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    description,
+                    toast.description!,
                     overflow: TextOverflow.visible,
                     maxLines: 3,
                   ),
@@ -59,18 +53,18 @@ class Toast extends StatelessWidget {
         ),
       ),
     );
-    if (width == null) {
+    if (toast.width == null) {
       return child;
     }
     return SizedBox(
-      width: width,
+      width: toast.width,
       child: child,
     );
   }
 }
 
-class ToastWrapper extends StatelessWidget {
-  const ToastWrapper({
+class ToastTransition extends StatelessWidget {
+  const ToastTransition({
     Key? key,
     required this.animation,
     required this.child,
@@ -82,7 +76,10 @@ class ToastWrapper extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizeTransition(
       sizeFactor: animation,
-      child: child,
+      child: FadeTransition(
+        opacity: animation,
+        child: child,
+      ),
     );
   }
 }
