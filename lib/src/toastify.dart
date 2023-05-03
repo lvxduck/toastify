@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
-import 'toast_tile.dart';
+import 'default_toast.dart';
 
+/// Displays a Toast above the current contents of the app.
 void showToast(
   BuildContext context,
   Toast toast, {
@@ -23,7 +24,7 @@ void showToast(
     overlayState.insert(overlayEntry);
   }
   WidgetsBinding.instance.addPostFrameCallback((_) {
-    controller.get(key).addItem(toast);
+    controller.get(key).add(toast);
   });
 }
 
@@ -38,7 +39,7 @@ class Toast {
     this.leading,
     this.width,
     this.duration = const Duration(milliseconds: 300),
-  }) {
+  }) : assert(!((title == null || description == null) && child == null)) {
     if (child == null) {
       _child = DefaultToast(toast: this);
     } else {
@@ -46,20 +47,40 @@ class Toast {
     }
   }
 
+  /// This is the ID of the toast, which is used to prevent duplicate toasts.
   final String? id;
+
+  /// The widget below this widget in the tree.
   late final Widget _child;
 
+  /// The widget below this widget in the tree.
   Widget get child => _child;
+
+  /// Toast will be auto close if [lifeTime] != null.
   final Duration? lifeTime;
+
+  /// The duration of toast animation
   final Duration duration;
+
+  /// The custom transition builder
   final Widget Function(
     Animation<double>,
     Widget child,
     bool isRemoving,
   )? transitionBuilder;
+
+  /// The title of toast
   final String? title;
+
+  /// The description of toast
   final String? description;
+
+  /// The leading of toast
   final Widget? leading;
+
+  /// The width of toast
+  ///
+  /// If width is null, toast will display with maximum screen width.
   final double? width;
 }
 
@@ -96,12 +117,14 @@ class Toastify extends StatelessWidget {
     required this.alignment,
   });
 
+  /// How to align the toast.
   final AlignmentGeometry alignment;
   final listKey = GlobalKey<AnimatedListState>();
   final List<Toast> items = [];
   late final OverlayEntry? overlayEntry;
 
-  void addItem(Toast toast) {
+  /// Add new toast
+  void add(Toast toast) {
     // Toast child is duplicate because child is constant
     if (items.where((e) => e.child == toast.child).isNotEmpty) {
       return;
@@ -114,18 +137,20 @@ class Toastify extends StatelessWidget {
     listKey.currentState!.insertItem(0, duration: toast.duration);
     if (toast.lifeTime != null) {
       Future.delayed(toast.lifeTime! + toast.duration, () {
-        removeItem(toast.child);
+        remove(toast.child);
       });
     }
   }
 
+  /// Remove all toasts held by this Toastify.
   void removeAll() {
     while (items.isNotEmpty) {
-      removeItem(items.last.child);
+      remove(items.last.child);
     }
   }
 
-  void removeItem(Widget toastWidget) {
+  /// Remove toast
+  void remove(Widget toastWidget) {
     final index = items.indexWhere((e) => e.child == toastWidget);
     if (index == -1) return;
     final toast = items[index];
@@ -147,13 +172,14 @@ class Toastify extends StatelessWidget {
     return context.findAncestorWidgetOfExactType<Toastify>()!;
   }
 
+  /// Build toast item
   Widget buildItem(Animation<double> animation, Toast toast, bool isRemoving) {
     final child = Align(
       alignment: alignment,
       child: toast.child,
     );
     return toast.transitionBuilder?.call(animation, child, isRemoving) ??
-        ToastTransition(
+        DefaultToastTransition(
           animation: animation,
           child: child,
         );

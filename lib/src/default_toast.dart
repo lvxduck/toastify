@@ -43,7 +43,7 @@ class DefaultToast extends StatelessWidget {
             ),
             IconButton(
               onPressed: () {
-                Toastify.of(context).removeItem(this);
+                Toastify.of(context).remove(this);
               },
               icon: const Icon(Icons.close),
               splashRadius: 24,
@@ -63,8 +63,8 @@ class DefaultToast extends StatelessWidget {
   }
 }
 
-class ToastTransition extends StatelessWidget {
-  const ToastTransition({
+class DefaultToastTransition extends StatelessWidget {
+  const DefaultToastTransition({
     Key? key,
     required this.animation,
     required this.child,

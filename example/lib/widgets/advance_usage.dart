@@ -161,7 +161,7 @@ class CustomInfoToast extends StatelessWidget {
                 const SizedBox(width: 12),
                 ElevatedButton(
                   onPressed: () {
-                    Toastify.of(context).removeItem(this);
+                    Toastify.of(context).remove(this);
                   },
                   child: const Text('Confirm'),
                 ),
