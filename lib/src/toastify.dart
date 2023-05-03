@@ -52,7 +52,11 @@ class Toast {
   Widget get child => _child;
   final Duration? lifeTime;
   final Duration duration;
-  final Widget Function(Animation<double>, Widget child)? transitionBuilder;
+  final Widget Function(
+    Animation<double>,
+    Widget child,
+    bool isRemoving,
+  )? transitionBuilder;
   final String? title;
   final String? description;
   final Widget? leading;
@@ -128,7 +132,7 @@ class Toastify extends StatelessWidget {
     items.removeAt(index);
     listKey.currentState?.removeItem(
       index,
-      (context, animation) => buildAnimatedItem(animation, toast),
+      (context, animation) => buildItem(animation, toast, true),
       duration: toast.duration,
     );
     Future.delayed(const Duration(seconds: 2), () {
@@ -143,12 +147,12 @@ class Toastify extends StatelessWidget {
     return context.findAncestorWidgetOfExactType<Toastify>()!;
   }
 
-  Widget buildAnimatedItem(Animation<double> animation, Toast toast) {
+  Widget buildItem(Animation<double> animation, Toast toast, bool isRemoving) {
     final child = Align(
       alignment: alignment,
       child: toast.child,
     );
-    return toast.transitionBuilder?.call(animation, child) ??
+    return toast.transitionBuilder?.call(animation, child, isRemoving) ??
         ToastTransition(
           animation: animation,
           child: child,
@@ -168,7 +172,7 @@ class Toastify extends StatelessWidget {
             shrinkWrap: true,
             initialItemCount: items.length,
             itemBuilder: (context, index, animation) {
-              return buildAnimatedItem(animation, items[index]);
+              return buildItem(animation, items[index], false);
             },
           ),
         ),

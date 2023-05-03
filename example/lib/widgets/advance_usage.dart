@@ -54,6 +54,38 @@ class _AdvanceUsageState extends State<AdvanceUsage> {
           },
           child: const Text('Prevent duplicate toast'),
         ),
+        ElevatedButton(
+          onPressed: () {
+            showToast(
+              context,
+              Toast(
+                id: '_toast',
+                child: const CustomInfoToast(
+                  title: 'Hello, Flutter dev!',
+                  description: 'This is a toast with custom transition',
+                ),
+                transitionBuilder: (animation, child, isRemoving) {
+                  if (isRemoving) {
+                    return FadeTransition(
+                      opacity: animation,
+                      child: child,
+                    );
+                  }
+                  return SlideTransition(
+                    position: animation.drive(
+                      Tween(
+                        begin: const Offset(1, 0),
+                        end: const Offset(0, 0),
+                      ),
+                    ),
+                    child: child,
+                  );
+                },
+              ),
+            );
+          },
+          child: const Text('Custom transition'),
+        ),
       ],
     );
   }
