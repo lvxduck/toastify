@@ -28,7 +28,8 @@ class _AdvanceUsageState extends State<AdvanceUsage> {
               context,
               const CustomInfoToast(
                 title: 'Hello, Flutter dev!',
-                description: 'This is a custom info toast',
+                description: 'This is a custom info toast. '
+                    'It has button confirm to close toast and distroy all',
               ),
             );
           },
@@ -65,46 +66,69 @@ class CustomInfoToast extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      width: 420,
       decoration: BoxDecoration(
-        color: Colors.blue[100],
+        color: Colors.blue[50],
         borderRadius: BorderRadius.circular(16),
+        boxShadow: const [
+          BoxShadow(
+            color: Colors.black26,
+            blurRadius: 6,
+          )
+        ],
       ),
-      margin: const EdgeInsets.symmetric(vertical: 6),
+      margin: const EdgeInsets.all(6),
       child: Padding(
-        padding: const EdgeInsets.all(16) - const EdgeInsets.only(right: 16),
-        child: Row(
+        padding: const EdgeInsets.all(16),
+        child: Column(
           children: [
-            const Icon(
-              Icons.info,
-              color: Colors.blue,
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    title,
-                    style: const TextStyle(fontWeight: FontWeight.w600),
+            Row(
+              children: [
+                const Icon(
+                  Icons.info,
+                  color: Colors.blue,
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        title,
+                        style: const TextStyle(fontWeight: FontWeight.w600),
+                      ),
+                      const SizedBox(height: 6),
+                      Text(
+                        description,
+                        overflow: TextOverflow.visible,
+                        maxLines: 3,
+                        style: const TextStyle(height: 1.5),
+                      ),
+                    ],
                   ),
-                  const SizedBox(height: 6),
-                  Text(
-                    description,
-                    overflow: TextOverflow.visible,
-                    maxLines: 3,
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
-            IconButton(
-              onPressed: () {
-                Toastify.of(context).removeItem(this);
-              },
-              icon: const Icon(Icons.close),
-              splashRadius: 24,
+            const SizedBox(height: 12),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                TextButton(
+                  onPressed: () {
+                    Toastify.of(context).removeAll();
+                  },
+                  child: const Text('Destroy All'),
+                ),
+                const SizedBox(width: 12),
+                ElevatedButton(
+                  onPressed: () {
+                    Toastify.of(context).removeItem(this);
+                  },
+                  child: const Text('Confirm'),
+                ),
+              ],
             ),
-            const SizedBox(width: 10),
           ],
         ),
       ),

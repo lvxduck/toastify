@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:toastify/toastify.dart';
 
@@ -105,7 +103,6 @@ class _BasicUsageState extends State<BasicUsage> {
         const SizedBox(height: 16),
         ElevatedButton(
           onPressed: () {
-            final id = Random().nextInt(100);
             showToast(
               context,
               Toast(
