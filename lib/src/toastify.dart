@@ -158,10 +158,10 @@ class Toastify extends StatelessWidget {
       (context, animation) => buildItem(animation, toast, true),
       duration: toast.duration,
     );
-    Future.delayed(const Duration(seconds: 2), () {
+    Future.delayed(const Duration(seconds: 2) + toast.duration, () {
       if (items.isEmpty && ToastifyController.instance.has(key!)) {
-        overlayEntry?.remove();
         ToastifyController.instance.remove(key!);
+        overlayEntry?.remove();
       }
     });
   }

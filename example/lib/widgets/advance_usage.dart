@@ -68,8 +68,8 @@ class _AdvanceUsageState extends State<AdvanceUsage> {
                 ),
                 transitionBuilder: (animation, child, isRemoving) {
                   if (isRemoving) {
-                    return FadeTransition(
-                      opacity: animation,
+                    return SizeTransition(
+                      sizeFactor: animation,
                       child: child,
                     );
                   }
