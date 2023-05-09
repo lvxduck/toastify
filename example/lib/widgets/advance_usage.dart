@@ -35,6 +35,7 @@ class _AdvanceUsageState extends State<AdvanceUsage> {
                       'It has button confirm to close toast and distroy all',
                 ),
               ),
+              width: 420,
             );
           },
           child: const Text('Show custom info toast'),
@@ -50,6 +51,7 @@ class _AdvanceUsageState extends State<AdvanceUsage> {
                   description: 'Prevent duplicate toast',
                 ),
               ),
+              width: 420,
             );
           },
           child: const Text('Prevent duplicate toast'),
@@ -82,6 +84,7 @@ class _AdvanceUsageState extends State<AdvanceUsage> {
                   );
                 },
               ),
+              width: 420,
             );
           },
           child: const Text('Custom transition'),
@@ -104,7 +107,6 @@ class CustomInfoToast extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 420,
       decoration: BoxDecoration(
         color: Colors.blue[50],
         borderRadius: BorderRadius.circular(16),

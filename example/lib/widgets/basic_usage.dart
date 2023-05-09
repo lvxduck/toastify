@@ -107,7 +107,6 @@ class _BasicUsageState extends State<BasicUsage> {
               context,
               Toast(
                 title: 'Basic toast',
-                width: 320,
                 leading: showLeading
                     ? const Icon(
                         Icons.info,
@@ -124,6 +123,7 @@ class _BasicUsageState extends State<BasicUsage> {
                     : null,
               ),
               alignment: alignment ?? Alignment.topRight,
+              width: 320,
             );
           },
           child: const Text('Show basic toast'),

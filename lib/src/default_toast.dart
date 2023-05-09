@@ -12,7 +12,7 @@ class DefaultToast extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final child = Card(
+    return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Padding(
         padding: const EdgeInsets.all(16) - const EdgeInsets.only(right: 16),
@@ -52,13 +52,6 @@ class DefaultToast extends StatelessWidget {
           ],
         ),
       ),
-    );
-    if (toast.width == null) {
-      return child;
-    }
-    return SizedBox(
-      width: toast.width,
-      child: child,
     );
   }
 }
