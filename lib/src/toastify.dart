@@ -7,14 +7,16 @@ void showToast(
   BuildContext context,
   Toast toast, {
   AlignmentGeometry alignment = Alignment.topRight,
+  double? width,
 }) {
   final overlayState = Overlay.of(context, rootOverlay: true);
   final controller = ToastifyController.instance;
-  final key = controller.genKey(context, alignment);
+  final key = controller.genKey(width, alignment);
   if (!controller.has(key)) {
     final toast = Toastify(
       key: key,
       alignment: alignment,
+      width: width,
     );
     controller.add(key, toast);
     final overlayEntry = OverlayEntry(
@@ -37,7 +39,6 @@ class Toast {
     this.title,
     this.description,
     this.leading,
-    this.width,
     this.duration = const Duration(milliseconds: 300),
   }) : assert(!((title == null || description == null) && child == null)) {
     if (child == null) {
@@ -77,11 +78,6 @@ class Toast {
 
   /// The leading of toast
   final Widget? leading;
-
-  /// The width of toast
-  ///
-  /// If width is null, toast will display with maximum screen width.
-  final double? width;
 }
 
 class ToastifyController {
@@ -97,8 +93,8 @@ class ToastifyController {
 
   bool has(Key key) => _multiToast.containsKey(key);
 
-  Key genKey(BuildContext context, AlignmentGeometry alignment) =>
-      Key('${context.toString()}_${alignment.toString()}');
+  Key genKey(double? width, AlignmentGeometry alignment) =>
+      Key('${width.toString()}_${alignment.toString()}');
 
   void add(Key key, Toastify toast) {
     _multiToast[key] = toast;
@@ -115,10 +111,12 @@ class Toastify extends StatelessWidget {
   Toastify({
     super.key,
     required this.alignment,
+    this.width,
   });
 
   /// How to align the toast.
   final AlignmentGeometry alignment;
+  final double? width;
   final listKey = GlobalKey<AnimatedListState>();
   final List<Toast> items = [];
   late final OverlayEntry? overlayEntry;
@@ -160,10 +158,10 @@ class Toastify extends StatelessWidget {
       (context, animation) => buildItem(animation, toast, true),
       duration: toast.duration,
     );
-    Future.delayed(const Duration(seconds: 2), () {
+    Future.delayed(const Duration(seconds: 2) + toast.duration, () {
       if (items.isEmpty && ToastifyController.instance.has(key!)) {
-        overlayEntry?.remove();
         ToastifyController.instance.remove(key!);
+        overlayEntry?.remove();
       }
     });
   }
@@ -188,18 +186,21 @@ class Toastify extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Align(
-        alignment: alignment,
-        child: Material(
-          color: Colors.transparent,
-          child: AnimatedList(
-            padding: const EdgeInsets.all(16),
-            key: listKey,
-            shrinkWrap: true,
-            initialItemCount: items.length,
-            itemBuilder: (context, index, animation) {
-              return buildItem(animation, items[index], false);
-            },
+      child: Material(
+        type: MaterialType.transparency,
+        child: Align(
+          alignment: alignment,
+          child: SizedBox(
+            width: width,
+            child: AnimatedList(
+              padding: const EdgeInsets.all(16),
+              key: listKey,
+              shrinkWrap: true,
+              initialItemCount: items.length,
+              itemBuilder: (context, index, animation) {
+                return buildItem(animation, items[index], false);
+              },
+            ),
           ),
         ),
       ),

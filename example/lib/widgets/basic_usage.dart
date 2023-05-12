@@ -12,7 +12,7 @@ class _BasicUsageState extends State<BasicUsage> {
   Alignment? alignment = Alignment.topRight;
   bool autoClose = false;
   bool showLeading = false;
-  double lifeTime = 100;
+  double lifeTime = 500;
   double duration = 200;
 
   @override
@@ -84,7 +84,7 @@ class _BasicUsageState extends State<BasicUsage> {
               ? Slider(
                   value: lifeTime,
                   onChanged: (value) => setState(() => lifeTime = value),
-                  min: 100,
+                  min: 500,
                   max: 2000,
                   divisions: 10,
                 )
@@ -107,7 +107,6 @@ class _BasicUsageState extends State<BasicUsage> {
               context,
               Toast(
                 title: 'Basic toast',
-                width: 320,
                 leading: showLeading
                     ? const Icon(
                         Icons.info,
@@ -124,6 +123,7 @@ class _BasicUsageState extends State<BasicUsage> {
                     : null,
               ),
               alignment: alignment ?? Alignment.topRight,
+              width: 320,
             );
           },
           child: const Text('Show basic toast'),
