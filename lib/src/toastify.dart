@@ -196,6 +196,7 @@ class Toastify extends StatelessWidget {
               padding: const EdgeInsets.all(16),
               key: listKey,
               shrinkWrap: true,
+              clipBehavior: Clip.none,
               initialItemCount: items.length,
               itemBuilder: (context, index, animation) {
                 return buildItem(animation, items[index], false);
