@@ -1,6 +1,6 @@
 name: toastify
 description: A comprehensive Flutter package that displays multiple types of toast messages with customizable designs and animations.
-version: 0.0.1
+version: 0.0.2
 homepage: https://github.com/lvxduck/toastify
 
 environment:
